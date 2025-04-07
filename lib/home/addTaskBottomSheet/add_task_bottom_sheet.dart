@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/app_colors.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/model/task_model.dart';
+import 'package:todo/provider/auth_user_provider.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
   AddTaskBottomSheet({super.key});
@@ -17,6 +19,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthUserProvider>(context);
     return Container(
       padding: EdgeInsets.all(15),
       child: Padding(
@@ -87,7 +90,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                   dateTime:
                       DateUtils.dateOnly(selectedDate).millisecondsSinceEpoch,
                 );
-                FirebaseFunctions.addTask(task);
+                FirebaseFunctions.addTask(task, authProvider.currentUser!.id!);
 
                 Navigator.pop(context);
               },

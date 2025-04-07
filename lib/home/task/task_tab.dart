@@ -1,8 +1,10 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/app_colors.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/home/task/task_item.dart';
+import 'package:todo/provider/auth_user_provider.dart';
 
 class TaskTab extends StatefulWidget {
   TaskTab({super.key});
@@ -16,6 +18,7 @@ class _TaskTabState extends State<TaskTab> {
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthUserProvider>(context);
     return Container(
       child: Column(
         children: [
@@ -33,9 +36,7 @@ class _TaskTabState extends State<TaskTab> {
             ),
             onDateSelected: (dateTime) {
               date = dateTime;
-              setState(() {
-
-              });
+              setState(() {});
             },
             leftMargin: 20,
             monthColor: AppColors.primaryColor,
@@ -47,7 +48,8 @@ class _TaskTabState extends State<TaskTab> {
             locale: 'en',
           ),
           StreamBuilder(
-            stream: FirebaseFunctions.getTask(date),
+            stream:
+                FirebaseFunctions.getTask(date, authProvider.currentUser!.id!),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(
